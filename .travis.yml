@@ -1,0 +1,22 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t throdines/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run throdines/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t throdines/multi-client ./client
+  - docker build -t throdines/multi-nginx ./nginx
+  - docker build -t throdines/multi-server ./server
+  - docker build -t throdines/multi-worker ./worker 
+  # Log in to the docker cli
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take these images and push them to docker hub
+  - docker push throdines/multi-client
+  - docker push throdines/multi-nginx
+  - docker push throdines/multi-server
+  - docker push throdines/multi-worker
