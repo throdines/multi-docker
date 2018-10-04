@@ -14,7 +14,7 @@
             "essential": false   
         },
         {
-            "name": "server",
+            "name": "worker",
             "image": "widesoftware/multi-worker",
             "hostname": "worker",
             "essential": false   
